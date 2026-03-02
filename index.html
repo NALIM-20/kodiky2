@@ -1,0 +1,316 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Neon Cocktail Dashboard</title>
+        <style>
+            body { margin:0;padding:20px;font-family:Arial;background:black;color:#ff7a00; position:relative; overflow-x:hidden; }
+            body::before {
+                content:"";
+                position:fixed; top:0; left:0; width:100%; height:100%;
+                background: radial-gradient(circle at 50% 50%, rgba(255,170,51,0.05), transparent 70%);
+                animation: backgroundPulse 6s infinite alternate;
+                pointer-events:none;
+            }
+            @keyframes backgroundPulse {
+                0% {opacity:0.05;}
+                50% {opacity:0.12;}
+                100% {opacity:0.05;}
+            }
+            h1 { text-align:center;font-size:40px;margin-bottom:10px;text-shadow:0 0 10px #ff7a00,0 0 20px #ff7a00,0 0 30px #ffaa33; }
+            #funFacts { text-align:center;font-size:18px;color:#ffaa33;margin-bottom:15px;text-shadow:0 0 5px #ff7a00; }
+            .main-text { margin-bottom:20px; }
+            .search-container { text-align:center;margin-bottom:10px; }
+            input { padding:10px;width:200px;border-radius:6px;border:1px solid #ff7a00;background:blac    k;color:#ff7a00; }
+            input::placeholder { color:#ffaa33; }
+            .ingredient-menu { text-align:center;margin:15px 0; }
+            .ingredient-menu button { padding:8px 12px;margin:3px;border:none;border-radius:6px;background:#ff7a00;color:black;cursor:pointer;font-weight:bold; }
+            .ingredient-menu button:hover { background:#ffaa33; }
+            .carousel-container { display:flex;overflow:hidden;gap:15px;margin-top:20px; }
+            .carousel-track { display:flex;gap:15px; }
+            .card { background:#111;border:2px solid #ff7a00;border-radius:12px;padding:10px;text-align:center;width:150px;flex-shrink:0;transition:transform 0.3s ease, box-shadow 0.3s ease; }
+            .card:hover { transform: scale(1.05); box-shadow:0 0 30px #ffaa33, 0 0 50px #ff7a00; }
+            .card img { width:100%;height:150px;object-fit:cover;border-radius:8px;margin-bottom:5px; }
+            .card h3 { margin:0;font-size:14px;text-shadow:0 0 5px #ff7a00, 0 0 10px #ffaa33; }
+            .info-bubble { background:#ff7a00;color:black;font-size:12px;border-radius:6px;padding:4px;margin-top:5px;text-align:center; text-shadow:0 0 5px #ff7a00; }
+            .neon { animation: flicker 2s infinite alternate; }
+            @keyframes flicker {
+                0% { text-shadow: 0 0 5px #ff7a00,0 0 10px #ffaa33; }
+                50% { text-shadow: 0 0 10px #ff7a00,0 0 20px #ffaa33; }
+                100% { text-shadow: 0 0 5px #ff7a00,0 0 10px #ffaa33; }
+            }
+            .modal { display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.9); }
+            .modal-content { background:#111;margin:5% auto;padding:20px;border:2px solid #ff7a00;width:80%;max-width:600px;border-radius:12px;color:#ff7a00; }
+            .modal-content h2 { margin-top:0;text-align:center; }
+            .modal-content p { line-height:1.4; }
+            .close { color:#ff7a00;float:right;font-size:28px;font-weight:bold;cursor:pointer; }
+            .close:hover { color:#ffaa33; }
+        </style>
+    </head>
+    <body>
+        <h1>🍹 Neon Cocktail</h1>
+        <div id="funFacts"></div>
+        <div class="main-text">
+    <p style="text-align:center;max-width:800px;margin:auto;font-size:16px;color:#ffaa33;">
+    Explore cocktails for inspiration. Did you know the Martini was invented in the late 1800s? 
+    We recommend top-quality brands like Grey Goose Vodka, Bacardi Rum, and Bombay Sapphire Gin.
+    Enjoy responsibly and get inspired!
+    </p>
+    </div>
+
+        <div class="search-container">
+            <form method="get" id="searchForm">
+                <input type="text" name="search" placeholder="Search by name..." value="">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Recommended brands -->
+        <div style="text-align:center;margin:10px 0;color:#ffaa33;font-size:14px;text-shadow:0 0 3px #ff7a00;">
+            Recommended brands: Grey Goose Vodka, Bacardi Rum, Bombay Sapphire Gin, Cointreau, Maker's Mark Whiskey
+        </div>
+
+        <div class='carousel-container'><div class='carousel-track' id='carouselTrack'>
+        <div class="card neon" onclick="openModal('modal0')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/26cq601492976203.jpg" alt="Vesuvio">
+            <h3>Vesuvio</h3>
+            <div class="info-bubble neon">Old Fashioned is a whiskey classic</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal1')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/iixv4l1485620014.jpg" alt="Zinger">
+            <h3>Zinger</h3>
+            <div class="info-bubble neon">Bacardi Rum is perfect for Mojitos</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal2')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/8189p51504735581.jpg" alt="Tequila Surprise">
+            <h3>Tequila Surprise</h3>
+            <div class="info-bubble neon">Triple Sec adds sweet citrus flavor</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal3')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/rvuswq1461867714.jpg" alt="Thriller">
+            <h3>Thriller</h3>
+            <div class="info-bubble neon">Tequila sunrise looks stunning with orange juice</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal4')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/athdk71504886286.jpg" alt="Rum Toddy">
+            <h3>Rum Toddy</h3>
+            <div class="info-bubble neon">Classic Martini invented in late 1800s</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal5')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/bmxmyq1630407098.jpg" alt="Kiwi Martini">
+            <h3>Kiwi Martini</h3>
+            <div class="info-bubble neon">Use fresh herbs for amazing flavor</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal6')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/mtdxpa1504374514.jpg" alt="Vesper">
+            <h3>Vesper</h3>
+            <div class="info-bubble neon">Bacardi Rum is perfect for Mojitos</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal7')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/xrvxpp1441249280.jpg" alt="Sangria">
+            <h3>Sangria</h3>
+            <div class="info-bubble neon">Fun fact: The Margarita is named after a woman</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal8')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/2x8thr1504816928.jpg" alt="A1">
+            <h3>A1</h3>
+            <div class="info-bubble neon">Classic Martini invented in late 1800s</div>
+        </div>
+        
+        <div class="card neon" onclick="openModal('modal9')">
+            <img src="https://www.thecocktaildb.com/images/media/drink/2en3jk1509557725.jpg" alt="Zombie">
+            <h3>Zombie</h3>
+            <div class="info-bubble neon">Try Grey Goose Vodka for smooth cocktails</div>
+        </div>
+        </div></div>
+
+        
+        <div id="modal0" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal0')">&times;</span>
+                <h2>Vesuvio</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/26cq601492976203.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>1 oz Light rum<br>1/2 oz Sweet Vermouth<br>Juice of 1/2 Lemon<br>1 tsp Powdered sugar<br>1 Egg white</p>
+                <h3>Instructions:</h3>
+                <p>Shake all ingredients with ice, strain into an old-fashioned glass over ice cubes, and serve.</p>
+            </div>
+        </div>
+        
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal1')">&times;</span>
+                <h2>Zinger</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/iixv4l1485620014.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>4 shots Peachtree schnapps<br>4 shots Surge</p>
+                <h3>Instructions:</h3>
+                <p>Get a shot glass and pour in three shots of the schnapps. Do the same with the Surge Cola. Then down it like Scheetz would.</p>
+            </div>
+        </div>
+        
+        <div id="modal2" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal2')">&times;</span>
+                <h2>Tequila Surprise</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/8189p51504735581.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>full glass Tequila<br>About 8 drops Tabasco sauce</p>
+                <h3>Instructions:</h3>
+                <p>Fill shot glass with Tequila. Add drops of Tobasco sauce.</p>
+            </div>
+        </div>
+        
+        <div id="modal3" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal3')">&times;</span>
+                <h2>Thriller</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/rvuswq1461867714.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>1 1/2 oz Scotch<br>1 oz Green Ginger Wine<br>1 oz Orange juice</p>
+                <h3>Instructions:</h3>
+                <p>In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a cocktail glass.</p>
+            </div>
+        </div>
+        
+        <div id="modal4" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal4')">&times;</span>
+                <h2>Rum Toddy</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/athdk71504886286.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>2 oz light or dark Rum<br>2 tsp Powdered sugar<br>1 twist of Lemon peel<br>2 tsp Water</p>
+                <h3>Instructions:</h3>
+                <p>Dissolve powdered sugar in water in an old-fashioned glass. Add rum and one ice cube and stir. Add the twist of lemon peel and serve.</p>
+            </div>
+        </div>
+        
+        <div id="modal5" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal5')">&times;</span>
+                <h2>Kiwi Martini</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/bmxmyq1630407098.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>1/2 Kiwi<br>1 tsp Sugar Syrup<br>1 1/2 oz Vodka<br>Garnish with Kiwi</p>
+                <h3>Instructions:</h3>
+                <p>The kiwi martini is a very fun vodka cocktail and it is one of the best drinks that makes use of fresh fruit. Though there are a few recipes floating around, this is one of the easiest and it is an absolutely delightful green martini to drink.
+
+For this recipe, you'll simply muddle slices of kiwi with simple syrup, then shake it with vodka. It's a drink that anyone can mix up in minutes and a perfect cocktail to show off your favorite vodka.</p>
+            </div>
+        </div>
+        
+        <div id="modal6" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal6')">&times;</span>
+                <h2>Vesper</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/mtdxpa1504374514.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>6 cl Gin<br>1.5 cl Vodka<br>0.75 cl Lillet Blanc</p>
+                <h3>Instructions:</h3>
+                <p>Shake over ice until well chilled, then strain into a deep goblet and garnish with a thin slice of lemon peel.</p>
+            </div>
+        </div>
+        
+        <div id="modal7" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal7')">&times;</span>
+                <h2>Sangria</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/xrvxpp1441249280.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>1 bottle Red wine<br>1/2 cup Sugar<br>1 cup Orange juice<br>1 cup Lemon juice<br>Cloves<br>Cinnamon</p>
+                <h3>Instructions:</h3>
+                <p>Mix all together in a pitcher and refrigerate. Add cloves and cinnamon sticks to taste. Serve in wine glasses.</p>
+            </div>
+        </div>
+        
+        <div id="modal8" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal8')">&times;</span>
+                <h2>A1</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/2x8thr1504816928.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>1 3/4 shot Gin<br>1 Shot Grand Marnier<br>1/4 Shot Lemon Juice<br>1/8 Shot Grenadine</p>
+                <h3>Instructions:</h3>
+                <p>Pour all ingredients into a cocktail shaker, mix and serve over ice into a chilled glass.</p>
+            </div>
+        </div>
+        
+        <div id="modal9" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal9')">&times;</span>
+                <h2>Zombie</h2>
+                <img src="https://www.thecocktaildb.com/images/media/drink/2en3jk1509557725.jpg" style="width:200px;margin:10px 0;">
+                <h3>Ingredients:</h3>
+                <p>1 1/2 oz Rum<br>1 1/2 oz Gold rum<br>1 oz 151 proof rum<br>1 tsp Pernod<br>1 tsp Grenadine<br>1 tsp Lime Juice<br>1 drop Angostura Bitters</p>
+                <h3>Instructions:</h3>
+                <p>Blend at high speed for no more than 5 seconds.
+
+Pour into a glass, add ice cubes to fill, then add the garnish.
+
+*Donn’s mix: Bring 3 crushed cinnamon sticks, 1 cup of sugar and 1 cup of water to a boil, stirring until the sugar is dissolved.
+
+Simmer for 2 minutes, then remove from the heat and let sit for at least 2 hours before straining into a clean glass bottle.
+
+Then add 1 part of the syrup and 2 parts of fresh grapefruit juice together.</p>
+            </div>
+        </div>
+        
+
+        <script>
+            function openModal(id) { document.getElementById(id).style.display='block'; }
+            function closeModal(id) { document.getElementById(id).style.display='none'; }
+            window.onclick = function(event) {
+                var modals=document.getElementsByClassName('modal');
+                for(var i=0;i<modals.length;i++){ if(event.target==modals[i]){modals[i].style.display='none';} }
+            }
+
+            function toggleIngredient(ingredient){
+                let params = new URLSearchParams(window.location.search);
+                let current = params.getAll('ingredient');
+                if(current.includes(ingredient)){
+                    current = current.filter(i=>i!==ingredient);
+                } else {
+                    current.push(ingredient);
+                }
+                params.delete('ingredient');
+                current.forEach(i=>params.append('ingredient',i));
+                window.location.search = params.toString();
+            }
+
+            // Rotate fun facts
+            const facts = ['Martini invented in the late 1800s', 'Margarita named after a woman', 'Gin and tonic was originally medicinal', 'Use fresh herbs for amazing flavor', 'Tequila sunrise looks stunning with orange juice', 'Old Fashioned is a whiskey classic', 'Try Grey Goose for smooth cocktails', 'Bacardi Rum is perfect for Mojitos'];
+            let factIndex = 0;
+            function rotateFacts() {
+                document.getElementById('funFacts').innerText = facts[factIndex];
+                factIndex = (factIndex + 1) % facts.length;
+            }
+            rotateFacts();
+            setInterval(rotateFacts, 5000);
+
+            if(!false) {
+                const track = document.getElementById('carouselTrack');
+                let scrollAmount = 0;
+                const speed = 1;
+                if(track.children.length>0){
+                    track.innerHTML += track.innerHTML;
+                    function animateCarousel(){
+                        scrollAmount += speed;
+                        if(scrollAmount >= track.scrollWidth/2) scrollAmount = 0;
+                        track.style.transform = 'translateX(-'+scrollAmount+'px)';
+                        requestAnimationFrame(animateCarousel);
+                    }
+                    animateCarousel();
+                }
+            }
+        </script>
+    </body>
+    </html>
+    
